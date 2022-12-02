@@ -37,3 +37,33 @@ fn collect_elf_calories(input: &str) -> Vec<i32> {
     elf_calories
 }
 
+
+#[cfg(test)]
+mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+    use crate::test_helpers::vec_compare;
+
+    use std::fs;
+
+    #[test]
+    fn test_collect_elf_calories() {
+        let fixture_file = "./data/day01/test.txt";
+        let test_input = fs::read_to_string(fixture_file)
+            .expect("Failed to read input file");
+        let result = collect_elf_calories(&test_input);
+        let expected = vec![6000i32, 4000, 11000, 24000, 10000];
+        assert!(vec_compare(&result, &expected));
+    }
+
+    #[test]
+    fn test_max_elf_calories_single() {
+        let mut test_data = vec![6000i32, 4000, 11000, 24000, 10000];
+        assert_eq!(max_elf_calories(&mut test_data, 1), 24000);
+    }
+    #[test]
+    fn test_max_elf_calories_top_n() {
+        let mut test_data = vec![6000i32, 4000, 11000, 24000, 10000];
+        assert_eq!(max_elf_calories(&mut test_data, 3), 45000);
+    }
+}
