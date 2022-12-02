@@ -15,7 +15,7 @@ cargo run -- <PROGRAM_NAME> <INPUT_FILE>
 ```
 
 You can find the list of program names that will work in
-the `match` statement [in `src\programs.rs`](/src/programs.rs#6).
+the `match` statement [in `src\programs.rs`](/src/programs.rs#L6).
 Input files are in the `data` directory, or you can create your own.
 
 ## Running the tests
