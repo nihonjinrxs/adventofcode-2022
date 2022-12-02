@@ -1,4 +1,5 @@
 # Advent of Code 2022
+[![Rust](https://github.com/nihonjinrxs/adventofcode-2022/actions/workflows/rust.yml/badge.svg)](https://github.com/nihonjinrxs/adventofcode-2022/actions/workflows/rust.yml)
 
 This repo contains the collection of my attempts at solving the Advent of Code 2022 challenges. I'll be starting by attempting these in Rust, but may add other languages later.
 
