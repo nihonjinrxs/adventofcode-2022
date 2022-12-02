@@ -10,5 +10,5 @@ fn main() {
     let input = fs::read_to_string(input_file_path)
         .expect("Failed to read input file");
 
-    print!("{}", programs::run_program(program, &input));
+    println!("{}", programs::run_program(program, &input));
 }
