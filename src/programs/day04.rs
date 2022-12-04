@@ -9,13 +9,18 @@ pub fn run(part_number: Parts, input: &str) -> String {
 fn compute_result(part_number: Parts, assignments: Vec<String>) -> i32 {
     match part_number {
         Parts::One => compute_fully_overlapping_pairs(assignments),
-        Parts::Two => compute_fully_overlapping_pairs(assignments),
+        Parts::Two => compute_overlapping_pairs(assignments),
     }
 }
 
 fn compute_fully_overlapping_pairs(assignments: Vec<String>) -> i32 {
     let pairs = collect_assignment_pairs(assignments);
     pairs.iter().filter(|pair| pair.full_overlap()).count() as i32
+}
+
+fn compute_overlapping_pairs(assignments: Vec<String>) -> i32 {
+    let pairs = collect_assignment_pairs(assignments);
+    pairs.iter().filter(|pair| pair.overlap()).count() as i32
 }
 
 #[derive(Clone, Copy, PartialEq, Debug)]
@@ -34,6 +39,7 @@ type PairAssignment = Vec<Assignment>;
 
 trait Overlap {
     fn full_overlap(&self) -> bool;
+    fn overlap(&self) -> bool;
 }
 
 impl Overlap for PairAssignment {
@@ -49,6 +55,29 @@ impl Overlap for PairAssignment {
         }
 
         elf1.start_section <= elf2.start_section && elf1.end_section >= elf2.end_section
+    }
+
+    fn overlap(&self) -> bool {
+        if self.full_overlap() {
+            return true;
+        }
+
+        let elf1: Assignment;
+        let elf2: Assignment;
+        if self[0].section_count() >= self[1].section_count() {
+            elf1 = self[0];
+            elf2 = self[1];
+        } else {
+            elf2 = self[0];
+            elf1 = self[1];
+        }
+
+        let left_overlap =
+            elf1.start_section <= elf2.start_section && elf1.end_section >= elf2.start_section;
+        let right_overlap =
+            elf1.start_section >= elf2.start_section && elf1.start_section <= elf2.end_section;
+
+        left_overlap || right_overlap
     }
 }
 
@@ -264,9 +293,27 @@ mod tests {
     }
 
     #[test]
+    fn test_pair_assignment_overlap() {
+        let inputs = fixture_assignment_pairs();
+        let expecteds = vec![false, false, true, true, true, true];
+        TestCase::create_many(inputs, expecteds)
+            .iter()
+            .for_each(|case| {
+                assert_eq!(case.input.overlap(), case.expected);
+            });
+    }
+
+    #[test]
     fn test_compute_fully_overlapping_pairs() {
         let test_data = fixture_assignments();
         let result = compute_fully_overlapping_pairs(test_data);
         assert_eq!(result, 2);
+    }
+
+    #[test]
+    fn test_compute_overlapping_pairs() {
+        let test_data = fixture_assignments();
+        let result = compute_overlapping_pairs(test_data);
+        assert_eq!(result, 4);
     }
 }
