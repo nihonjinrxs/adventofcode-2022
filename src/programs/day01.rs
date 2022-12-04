@@ -37,7 +37,6 @@ fn collect_elf_calories(input: &str) -> Vec<i32> {
     elf_calories
 }
 
-
 #[cfg(test)]
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
@@ -49,8 +48,7 @@ mod tests {
     #[test]
     fn test_collect_elf_calories() {
         let fixture_file = "./data/day01/test.txt";
-        let test_input = fs::read_to_string(fixture_file)
-            .expect("Failed to read input file");
+        let test_input = fs::read_to_string(fixture_file).expect("Failed to read input file");
         let result = collect_elf_calories(&test_input);
         let expected = vec![6000i32, 4000, 11000, 24000, 10000];
         assert!(vec_compare(&result, &expected));

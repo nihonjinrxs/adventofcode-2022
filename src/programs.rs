@@ -14,6 +14,6 @@ pub fn run_program(program_name: &str, input: &str) -> String {
         "03a" | "3a" => day03::run(Parts::One, &input).to_owned(),
         "03b" | "3b" => day03::run(Parts::Two, &input).to_owned(),
         "04a" | "4a" => day04::run(Parts::One, &input).to_owned(),
-        _ => String::from("Unknown program")
+        _ => String::from("Unknown program"),
     }
 }

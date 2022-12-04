@@ -9,11 +9,16 @@ pub struct TestCase<TInput, TExpected> {
 }
 
 impl<TInput: Clone, TExpected: Clone> TestCase<TInput, TExpected> {
-    pub fn create_many(inputs: Vec<TInput>, expecteds: Vec<TExpected>) -> Vec<TestCase<TInput, TExpected>> {
+    pub fn create_many(
+        inputs: Vec<TInput>,
+        expecteds: Vec<TExpected>,
+    ) -> Vec<TestCase<TInput, TExpected>> {
         let pairs_iter = inputs.iter().zip(expecteds.iter());
-        pairs_iter.map(|(input, expected)| TestCase{
-            input: input.clone(),
-            expected: expected.clone(),
-        }).collect::<Vec<TestCase<TInput, TExpected>>>()
+        pairs_iter
+            .map(|(input, expected)| TestCase {
+                input: input.clone(),
+                expected: expected.clone(),
+            })
+            .collect::<Vec<TestCase<TInput, TExpected>>>()
     }
 }

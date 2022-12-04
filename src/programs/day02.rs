@@ -39,7 +39,7 @@ impl RPSStrategy {
             "A" => RPSPlay::Rock,
             "B" => RPSPlay::Paper,
             "C" => RPSPlay::Scissors,
-            _ => panic!("Unknown turn code for opponent {}", turn_code)
+            _ => panic!("Unknown turn code for opponent {}", turn_code),
         }
     }
 
@@ -48,7 +48,7 @@ impl RPSStrategy {
             "X" => RPSPlay::Rock,
             "Y" => RPSPlay::Paper,
             "Z" => RPSPlay::Scissors,
-            _ => panic!("Unknown turn code for player {}", player_code)
+            _ => panic!("Unknown turn code for player {}", player_code),
         };
         RPSTurn {
             opponent: self.opponent_play(opponent_code),
@@ -62,24 +62,21 @@ impl RPSStrategy {
             "X" => RPSTurnOutcome::Loss,
             "Y" => RPSTurnOutcome::Tie,
             "Z" => RPSTurnOutcome::Win,
-            _ => panic!("Unknown outcome code {}", outcome_code)          
+            _ => panic!("Unknown outcome code {}", outcome_code),
         };
         match outcome {
-            RPSTurnOutcome::Tie =>
-                RPSTurn {
-                    opponent: opponent_play,
-                    player: opponent_play.clone(),
-                },
-            RPSTurnOutcome::Win =>
-                RPSTurn {
-                    opponent: opponent_play,
-                    player: opponent_play.defeated_by(),
-                },
-            RPSTurnOutcome::Loss =>
-                RPSTurn {
-                    opponent: opponent_play,
-                    player: opponent_play.defeats(),
-                },
+            RPSTurnOutcome::Tie => RPSTurn {
+                opponent: opponent_play,
+                player: opponent_play.clone(),
+            },
+            RPSTurnOutcome::Win => RPSTurn {
+                opponent: opponent_play,
+                player: opponent_play.defeated_by(),
+            },
+            RPSTurnOutcome::Loss => RPSTurn {
+                opponent: opponent_play,
+                player: opponent_play.defeats(),
+            },
         }
     }
 }
@@ -152,15 +149,16 @@ impl RPSTurn {
 fn compute_all_turns_score(strategy_guide: Vec<(&str, &str)>, strategy: RPSStrategy) -> i32 {
     strategy_guide
         .iter()
-        .map(|(code1, code2)|
-            strategy.decode_turn(code1, code2).score()
-        ).sum()
+        .map(|(code1, code2)| strategy.decode_turn(code1, code2).score())
+        .sum()
 }
 
 fn collect_turns(input: &str) -> Vec<(&str, &str)> {
     let mut turns: Vec<(&str, &str)> = vec![];
     for l in input.split('\n') {
-        if l.trim().is_empty() { continue }
+        if l.trim().is_empty() {
+            continue;
+        }
         let code_pair = l.trim().split(' ').collect::<Vec<_>>();
         let turn = (code_pair[0], code_pair[1]);
         turns.push(turn);
@@ -179,8 +177,7 @@ mod tests {
     #[test]
     fn test_collect_turns() {
         let fixture_file = "./data/day02/test.txt";
-        let test_input = fs::read_to_string(fixture_file)
-            .expect("Failed to read input file");
+        let test_input = fs::read_to_string(fixture_file).expect("Failed to read input file");
         let result = collect_turns(&test_input);
         let expected = vec![("A", "Y"), ("B", "X"), ("C", "Z")];
         assert!(vec_compare(&result, &expected));
