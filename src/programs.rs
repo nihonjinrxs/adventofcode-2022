@@ -3,6 +3,7 @@ pub mod day02;
 pub mod day03;
 pub mod day04;
 pub mod day05;
+pub mod day06;
 
 use crate::parts::Parts;
 
@@ -17,6 +18,8 @@ pub fn run_program(program_name: &str, input: &str) -> String {
         "04a" | "4a" => day04::run(Parts::One, &input).to_owned(),
         "04b" | "4b" => day04::run(Parts::Two, &input).to_owned(),
         "05a" | "5a" => day05::run(Parts::One, &input).to_owned(),
+        "06a" | "6a" => day06::run(Parts::One, &input).to_owned(),
+        "06b" | "6b" => day06::run(Parts::Two, &input).to_owned(),
         _ => String::from("Unknown program"),
     }
 }
