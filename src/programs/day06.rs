@@ -12,21 +12,29 @@ fn compute_result(part_number: Parts, input: &str) -> i32 {
     }
 }
 
-fn find_marker(data: &str) -> {
-    let mut start_of_last4: usize = 0;
-    for n in (3usize..data).len() {
-        if let Some(last4) = data.get(n-3..n) {
+fn has_duplicated_chars(data: &str) -> bool {
+    let mut data_chars = data.chars().collect::<Vec<char>>();
+    data_chars.sort();
+    data_chars.dedup();
+    data_chars.len() < data.len()
+}
+
+fn find_marker(data: &str) -> i32 {
+    for n in 4usize..data.len() {
+        if let Some(last4) = data.get(n-4..n) {
+            if last4.len() < 4 {
+                panic!("n = {}, last4 = '{}', data = '{}', error: last4.len() < 4", n, last4, data);
+            }
             // process the chunk
-            let current = last4[3];
-            let previous = last4.get(0..3);
-            if current in previous {
-                start_of_last4 = previous.find(current) + 1;
+            if !has_duplicated_chars(last4) {
+                return (n).try_into().unwrap()
             }
         } else {
             // end of string
             panic!("Did not find a start of packet marker.");
         }
     }
+    -1
 }
 
 #[cfg(test)]
@@ -38,8 +46,29 @@ mod tests {
     use std::fs;
 
     #[test]
+    fn test_has_duplicated_chars() {
+        let test_cases: Vec<TestCase<&str, bool>> = vec![
+            TestCase { input: "aabc", expected: true },
+            TestCase { input: "abac", expected: true },
+            TestCase { input: "abca", expected: true },
+            TestCase { input: "abbc", expected: true },
+            TestCase { input: "babc", expected: true },
+            TestCase { input: "abcb", expected: true },
+            TestCase { input: "bacb", expected: true },
+            TestCase { input: "abcd", expected: false },
+        ];
+
+        let mut result: bool = false;
+        test_cases.iter().for_each(|case| {
+            result = has_duplicated_chars(case.input);
+            println!("Testing '{}'... result {} =?= expected {} = {}", case.input, result, case.expected, result == case.expected);
+            assert_eq!(result, case.expected);
+        });
+    }
+
+    #[test]
     fn test_find_marker_from_fixture_data() {
-        let fixture_file = "./data/day01/test.txt";
+        let fixture_file = "./data/day06/test.txt";
         let test_input = fs::read_to_string(fixture_file).expect("Failed to read input file");
         let result = find_marker(&test_input);
         let expected = 7;
@@ -48,13 +77,15 @@ mod tests {
 
     #[test]
     fn test_find_marker() {
-        let mut test_data = vec![
+        let test_data = vec![
             TestCase { input: "bvwbjplbgvbhsrlpgdmjqwftvncz", expected: 5 },
             TestCase { input: "nppdvjthqldpwncqszvftbrmjlhg", expected: 6 },
             TestCase { input: "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", expected: 10 },
             TestCase { input: "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", expected: 11 },
         ];
+        
         test_data.iter().for_each(|case| {
+            println!("Input: '{}', Expected: {}, Result: {}", case.input, case.expected, find_marker(case.input));
             assert_eq!(find_marker(case.input), case.expected);
         });
     }
